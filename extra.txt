@@ -1,0 +1,196 @@
+<!-- Modal add brand -->
+                            <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label for="password" class="col-sm-3 control-label">Current Password</label>
+                                                <input id="password" type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                                                
+                                            </div>  
+
+                                            <div class="form-group">
+                                                <label for="password" class="col-sm-3 control-label">New Password</label>
+                                                <input id="password" type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                                                
+                                            </div> 
+                                            
+
+                                            <div class="modal-footer">
+                                                <input type="button" class="btn btn-secondary" data-dismiss="modal" value="close">
+                                                <input class="submit" type="submit" name="Submit" value="Update">
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <!-- <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div> -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="modal" id="passwordModal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Change Password</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Your form for changing password goes here -->
+                                            <!-- Example form placeholder -->
+                                            <form>
+                                                <label for="newPassword">New Password:</label><br>
+                                                <input type="password" id="newPassword" name="newPassword"><br><br>
+                                                <label for="confirmPassword">Confirm Password:</label><br>
+                                                <input type="password" id="confirmPassword" name="confirmPassword"><br><br>
+                                                <input type="submit" value="Submit">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            @dataIndex = 1;
+
+                                        @php
+
+                                            // Convert milliseconds to seconds
+                                            $timestampInMilliseconds = 1696078616842;
+                                            $timestampInSeconds = $timestampInMilliseconds / 1000;
+
+                                            // Convert timestamp to Carbon instance
+                                            $timestamp = \Carbon\Carbon::createFromTimestamp($timestampInSeconds);
+
+
+                                        @endphp
+
+
+
+////////feedback insert data
+                                        try{
+                                            DB::beginTransaction();
+                                            #validation
+                                            $request->validate([
+                                                'email'     => 'required|email',
+                                                'message'   => 'required',
+                                                'datetime' => 'required|date',
+                                            ]);
+                                
+                                            $feedback = new Feedback();
+                                            $feedback->email = $request->email;
+                                            $feedback->message = $request->message;
+                                            $feedback->datetime = $request->datetime;
+                                            $feedback->save();
+                                            
+                                
+                                            DB::commit();
+                                            // die($feedback);
+                                            return redirect()->back()->with('success','Feedback Insert Successfully!!');
+                                
+                                        } catch (Exception $e) {
+                                            DB::rollback();
+                                            Log::error('Error occurred while inserting feedback: ' . $e->getMessage());
+                                            return redirect()->back()->with('error', 'Feedback not Inserted. Please try again!!');
+                                        }
+
+
+                                        feedback :
+                                        $feedback->datetime = Carbon::createFromFormat('d/m/y, g:i a', $request->datetime)->format('Y-m-d H:i:s');  
+
+                                        <td class="">
+                                            {{ \Carbon\Carbon::createFromFormat($feedbacks->datetime)->format('d/m/y, g:i a') }}
+                                        </td>
+
+
+<!-- search code javascript -->
+const searchInput = document.getElementById('searchInput');
+
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent the default behavior of the 'Enter' key
+
+                const searchData = searchInput.value;
+
+                axios.get('/search', {
+                    params: {
+                        search: searchData
+                    }
+                })
+                .then(function (response) {
+                    // Handle the response data here
+                    console.log(response.data);
+                    const users = response.data;
+
+                    const tableBody = document.querySelector('.datatable tbody');
+                    tableBody.innerHTML = ''; // Clear the existing data
+
+                    users.forEach(function(user) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><input type="hidden" id="id" name="id" value="${user.id}" /></td>
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                            <td>${user.Gold}</td>
+                            <td>${user.Tickets}</td>
+                            <td>${user.Cash}</td>
+                            <td>${user.Dice}</td>
+                            <td>${user.otp}</td>
+                            <td>${user.Graphics}</td>
+                            <td>${user.Shadows}</td>
+                            <td>${user.Effects}</td>
+                            <td>${user.status}</td>
+                            <td>${user.volume}</td>
+                            <td>${user.sfx}</td>
+                            <td>${user.role}</td>
+                            <td>${user.appsfx}</td>
+                            <!-- Add more columns as needed -->
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(function (error) {
+                    // Handle any errors here
+                    console.error(error);
+                });
+            }
+    });
+
+
+<!-- viewmembers file Friends field -->
+<th>Friends</th>
+<td>
+    @foreach($item->Friends as $friend)
+        @if(is_array($friend))
+            {{ json_encode($friend) }}
+        @else
+            {{ htmlspecialchars($friend) }}
+        @endif
+    @endforeach
+</td>
+
+php artisan db:seed --class=LoginSeeder
+
+php artisan db:seed
+
